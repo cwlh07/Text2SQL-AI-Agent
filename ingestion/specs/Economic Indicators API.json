@@ -1,0 +1,519 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Economic Indicators API",
+    "description": "This API contains analysis of current and historical data for the economic forecast"
+  },
+  "servers": [
+    {
+      "url": "https://api.fanniemae.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Economic Indicators API",
+      "description": "Economic Indicators Data.",
+      "externalDocs": {
+        "description": "find more info here",
+        "url": "http://www.fanniemae.com/portal/research-insights/forecast.html"
+      }
+    }
+  ],
+  "paths": {
+    "/v1/economic-forecasts/indicators/{indicator}": {
+      "get": {
+        "tags": [
+          "Economic Indicators API"
+        ],
+        "summary": "Get economic indicator information for a specific indicator",
+        "description": "Fannie Mae’s Economic & Strategic Research Group provides analysis of current and historical data and forecasts economic trends in the housing and mortgage-finance markets.\n\r --- \n\rThis call will return all available data for a specific indicator.\n\r---\n\rAn array of **indicatorTimeSeries**, which is data from a single report, is returned containing the following information.\n\r*effectiveDate*: The date the report was released.\n\r*indicator-name*: The name of the indicator that the data is for.\n\r*points*: An array of **Points**, containing value data.\n\r\n\r---\n\rA **Point** contains the following information.\n\r*forecast*: True if the data is forecasted, false if it is historical.\n\r*quarter*: The quarter of the data point. Q1, Q2, Q3, Q4, or EOY.\n\r*year*: The data point year in yyyy format.\n\r*value*: The data value, a double\n\r",
+        "operationId": "getEconomicIndicatorsByName",
+        "parameters": [
+          {
+            "name": "indicator",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "gross-domestic-product",
+                "personal-consumption-expenditures",
+                "residential-fixed-investment",
+                "business-fixed-investment",
+                "government-consumption-and-investment",
+                "net-exports",
+                "change-in-business-inventories",
+                "consumer-price-index",
+                "core-consumer-price-index-excl-food-and-energy",
+                "personal-chain-expenditures-chain-price-index",
+                "core-personal-chain-expenditures-chain-price-index-excl-food-and-energy",
+                "unemployment-rate",
+                "employment-total-nonfarm",
+                "federal-funds-rate",
+                "1-year-treasury-note-yield",
+                "10-year-treasury-note-yield"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "No economic indicator data found for {indicator}."
+          },
+          "500": {
+            "description": "An error occurred while getting economic indicators data."
+          }
+        }
+      }
+    },
+    "/v1/economic-forecasts/data/years/{year}": {
+      "get": {
+        "tags": [
+          "Economic Indicators API"
+        ],
+        "summary": "Get economic indicators data for a given year from all reports",
+        "description": "Fannie Mae’s Economic & Strategic Research Group provides analysis of current and historical data and forecasts economic trends in the housing and mortgage-finance markets.\n\r --- \n\rThis call will return all available data for a specific year.\n\r---\n\rAn *indicators* object is returned containing the following information.\n\r*indicator*: An array of **indicators**\n\r\n\r---\n\rAn **indicator** contains data for a single indicator and a single report. It contains the following information.\n\r*effectiveDate*: The date the report was released.\n\r*indicator-name*: The name of the indicator that the data is for.\n\r*points*: An array of **Points**, containing value data.\n\r\n\r---\n\rA **Point** contains the following information.\n\r*forecast*: True if the data is forecasted, false if it is historical.\n\r*quarter*: The quarter of the data point. Q1, Q2, Q3, Q4, or EOY.\n\r*year*: The data point year in yyyy format.\n\r*value*: The data value, a double\n\r",
+        "operationId": "getEconomicIndicatorForYear",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "description": "The year is expected in the format of yyyy.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "No economic indicator data for {year}"
+          },
+          "500": {
+            "description": "An error occurred while getting economic indicators data."
+          }
+        }
+      }
+    },
+    "/v1/economic-forecasts/reports/years/{year}/months/{month}": {
+      "get": {
+        "tags": [
+          "Economic Indicators API"
+        ],
+        "summary": "Get economic indicators data from a specific report year and report quarter",
+        "description": "Fannie Mae’s Economic & Strategic Research Group provides analysis of current and historical data and forecasts economic trends in the housing and mortgage-finance markets.\n\r --- \n\rThis call will return all available data for a specific report year.\n\r---\n\rAn *indicators* object is returned containing the following information.\n\r*indicator*: An array of **indicators**\n\r\n\r---\n\rAn **indicator** contains data for a single indicator and a single report. It contains the following information.\n\r*effectiveDate*: The date the report was released.\n\r*indicator-name*: The name of the indicator that the data is for.\n\r*points*: An array of **Points**, containing value data.\n\r\n\r---\n\rA **Point** contains the following information.\n\r*forecast*: True if the data is forecasted, false if it is historical.\n\r*quarter*: The quarter of the data point. Q1, Q2, Q3, Q4, or EOY.\n\r*year*: The data point year in yyyy format.\n\r*value*: The data value, a double\n\r",
+        "operationId": "getEconomicIndicatorForEffDateForYearAndMonth",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "description": "The year is expected in the format of yyyy.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "description": "The month is expected in the format of mm.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "No economic indicator data found for {year}/{month}."
+          },
+          "500": {
+            "description": "An error occurred while getting economic indicators data."
+          }
+        }
+      }
+    },
+    "/v1/economic-forecasts/data/years/{year}/quarters/{quarter}": {
+      "get": {
+        "tags": [
+          "Economic Indicators API"
+        ],
+        "summary": "Get economic indicators data for a given year and quarter from all reports",
+        "description": "Fannie Mae’s Economic & Strategic Research Group provides analysis of current and historical data and forecasts economic trends in the housing and mortgage-finance markets.\n\r --- \n\rThis call will return all available data for a specific year and quarter.\n\r---\n\rAn *indicators* object is returned containing the following information.\n\r*indicator*: An array of **indicators**\n\r\n\r---\n\rAn **indicator** contains data for a single indicator and a single report. It contains the following information.\n\r*effectiveDate*: The date the report was released.\n\r*indicator-name*: The name of the indicator that the data is for.\n\r*points*: An array of **Points**, containing value data.\n\r\n\r---\n\rA **Point** contains the following information.\n\r*forecast*: True if the data is forecasted, false if it is historical.\n\r*quarter*: The quarter of the data point. Q1, Q2, Q3, Q4, or EOY.\n\r*year*: The data point year in yyyy format.\n\r*value*: The data value, a double\n\r",
+        "operationId": "getEconomicIndicatorForYearAndQuarter",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "description": "The year is expected in the format of yyyy.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "quarter",
+            "in": "path",
+            "description": "The quarter as one of allowable values.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "q1",
+                "q2",
+                "q3",
+                "q4",
+                "eoy"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "No economic indicator data found for {year} and {quarter}."
+          },
+          "500": {
+            "description": "An error occurred while getting economic indicators data."
+          }
+        }
+      }
+    },
+    "/v1/economic-forecasts/reports/years/{year}": {
+      "get": {
+        "tags": [
+          "Economic Indicators API"
+        ],
+        "summary": "Get economic indicators data from a specific report year",
+        "description": "Fannie Mae’s Economic & Strategic Research Group provides analysis of current and historical data and forecasts economic trends in the housing and mortgage-finance markets.\n\r --- \n\rThis call will return all available data for a specific report year.\n\r---\n\rAn *indicators* object is returned containing the following information.\n\r*indicator*: An array of **indicators**\n\r\n\r---\n\rAn **indicator** contains data for a single indicator and a single report. It contains the following information.\n\r*effectiveDate*: The date the report was released.\n\r*indicator-name*: The name of the indicator that the data is for.\n\r*points*: An array of **Points**, containing value data.\n\r\n\r---\n\rA **Point** contains the following information.\n\r*forecast*: True if the data is forecasted, false if it is historical.\n\r*quarter*: The quarter of the data point. Q1, Q2, Q3, Q4, or EOY.\n\r*year*: The data point year in yyyy format.\n\r*value*: The data value, a double\n\r",
+        "operationId": "getEconomicIndicatorForEffDateForYear",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "description": "The year is expected in the format of yyyy.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndicatorsReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "No economic indicator data found for {year}."
+          },
+          "500": {
+            "description": "An error occurred while getting economic indicators data."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Quarter": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "quarterNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quarterName": {
+            "type": "string",
+            "xml": {
+              "name": "quarter"
+            }
+          },
+          "yearString": {
+            "type": "string",
+            "xml": {
+              "name": "year"
+            }
+          }
+        }
+      },
+      "TimeSeriesDataPointQuarterDouble": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "$ref": "#/components/schemas/Quarter"
+          },
+          "forecast": {
+            "type": "boolean"
+          },
+          "value": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true,
+            "example": 2736
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true,
+            "example": 2018
+          },
+          "quarter": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Q1"
+          },
+          "unit": {
+            "type": "string",
+            "example": "percent"
+          }
+        }
+      },
+      "IndicatorTimeSeries": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/Indicator"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "indicatorName": {
+            "type": "string",
+            "xml": {
+              "name": "indicator-name"
+            }
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSeriesDataPointQuarterNumber"
+            }
+          },
+          "timeSeries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSeriesDataPointQuarterNumber"
+            }
+          }
+        }
+      },
+      "IndicatorsReport": {
+        "type": "object",
+        "properties": {
+          "indicators": {
+            "type": "array",
+            "xml": {
+              "wrapped": true
+            },
+            "items": {
+              "$ref": "#/components/schemas/IndicatorTimeSeriesDouble"
+            }
+          }
+        }
+      },
+      "IndicatorTimeSeriesDouble": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/Indicator"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "indicatorName": {
+            "type": "string",
+            "xml": {
+              "name": "indicator-name"
+            }
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSeriesDataPointQuarterDouble"
+            }
+          },
+          "timeSeries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimeSeriesDataPointQuarterDouble"
+            }
+          }
+        }
+      },
+      "Indicator": {
+        "type": "object",
+        "properties": {
+          "subjectArea": {
+            "type": "string",
+            "enum": [
+              "all-loans",
+              "manufactured-housing-loans",
+              "chattel-loans",
+              "surveys",
+              "research"
+            ]
+          },
+          "dataSetType": {
+            "type": "string",
+            "enum": [
+              "acquisitions",
+              "performance",
+              "liquidation",
+              "nhs",
+              "economic-forecasts",
+              "housing-indicators",
+              "mortgage-lender-sentiment",
+              "manufactured-home-communities",
+              "loan-limits",
+              "mf-manufactured-home-communities"
+            ]
+          },
+          "indicatorName": {
+            "type": "string"
+          }
+        }
+      },
+      "TimeSeriesDataPointQuarterNumber": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "$ref": "#/components/schemas/Quarter"
+          },
+          "forecast": {
+            "type": "boolean"
+          },
+          "value": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true,
+            "example": 2736
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true,
+            "example": 2018
+          },
+          "quarter": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Q1"
+          },
+          "unit": {
+            "type": "string",
+            "example": "percent"
+          }
+        }
+      }
+    }
+  }
+}
